@@ -60,7 +60,7 @@ def load_dataset(csv_path, label_col='y', add_intercept=False):
     return inputs, labels
 
 
-def plot(x, y, theta, save_path, correction=1.0):
+def plot(x, y, theta, save_path, correction=1.0, x_eval=[], y_pred=[]):
     """Plot dataset and fitted logistic regression parameters.
 
     Args:
@@ -72,8 +72,10 @@ def plot(x, y, theta, save_path, correction=1.0):
     """
     # Plot dataset
     plt.figure()
-    plt.plot(x[y == 1, -2], x[y == 1, -1], 'bx', linewidth=2)
-    plt.plot(x[y == 0, -2], x[y == 0, -1], 'go', linewidth=2)
+    plt.plot(x[y == 1, -2], x[y == 1, -1], 'bx', linewidth=2,alpha=0.5)
+    plt.plot(x[y == 0, -2], x[y == 0, -1], 'go', linewidth=2, alpha=0.5)
+    if len(x_eval) > 0:
+        plt.scatter(x_eval[::, -2], x_eval[::, -1], marker='^', linewidth=2, c=y_pred)
 
     # Plot decision boundary (found by solving for theta^T x = 0)
     margin1 = (max(x[:, -2]) - min(x[:, -2]))*0.2
@@ -88,3 +90,7 @@ def plot(x, y, theta, save_path, correction=1.0):
     plt.xlabel('x1')
     plt.ylabel('x2')
     plt.savefig(save_path)
+
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
