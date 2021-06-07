@@ -56,7 +56,7 @@ class LogisticRegression(LinearModel):
             if np.linalg.norm(step, ord=1) < self.eps: break
             else:
                 self.theta -= step
-
+            n_iter += 1
         
         # *** END CODE HERE ***
 
