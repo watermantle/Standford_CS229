@@ -24,7 +24,6 @@ def main(train_path, eval_path, pred_path):
     util.plot(x=x_train, y=y_train, theta=logreg.theta, save_path='output/p01b{0}.png'.format(pred_path[16:-4]),
               x_eval=x_eval, y_pred=y_pred)
     np.savetxt(pred_path, y_pred, fmt='%d')
-    print(logreg.theta)
     # *** END CODE HERE ***
 
 class LogisticRegression(LinearModel):
