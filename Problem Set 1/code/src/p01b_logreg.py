@@ -21,10 +21,10 @@ def main(train_path, eval_path, pred_path):
 
     y_pred = logreg.predict(x_eval)
     # plot decision boundary
-    util.plot(x=x_train, y=y_train, theta=logreg.theta, save_path='output/p01b{0}.png'.format(pred_path[-5]),
+    util.plot(x=x_train, y=y_train, theta=logreg.theta, save_path='output/p01b{0}.png'.format(pred_path[16:-4]),
               x_eval=x_eval, y_pred=y_pred)
     np.savetxt(pred_path, y_pred, fmt='%d')
-    
+    print(logreg.theta)
     # *** END CODE HERE ***
 
 class LogisticRegression(LinearModel):
@@ -48,14 +48,13 @@ class LogisticRegression(LinearModel):
         while n_iter < self.max_iter:
 
             h_x = util.sigmoid(x.dot(self.theta))
-            gradient_J = -x.T.dot(y - h_x)/m
-            H_J = (x.T * h_x * (1-h_x)).dot(x)
+            gradient_J = -x.T.dot(y - h_x) / m
+            H_J = (x.T * h_x * (1- h_x)).dot(x) / m
 
             ## update theta & check if converge
             step = np.linalg.inv(H_J).dot(gradient_J)
+            self.theta -= step
             if np.linalg.norm(step, ord=1) < self.eps: break
-            else:
-                self.theta -= step
             n_iter += 1
         
         # *** END CODE HERE ***

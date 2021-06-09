@@ -14,6 +14,8 @@ def main(train_path, eval_path, pred_path):
     """
     # Load dataset
     x_train, y_train = util.load_dataset(train_path, add_intercept=False)
+
+    # *** START CODE HERE ***
     x_eval, y_eval = util.load_dataset(eval_path, add_intercept=True)
 
     GDA_model = GDA()
@@ -21,11 +23,9 @@ def main(train_path, eval_path, pred_path):
 
     y_pred = GDA_model.predict(x_eval)
     # plot decision boundary
-    util.plot(x=x_train, y=y_train, theta=GDA_model.theta, save_path='output/p01e{0}.png'.format(pred_path[-5]),
+    util.plot(x=x_train, y=y_train, theta=GDA_model.theta, save_path='output/p01e{0}.png'.format(pred_path[16:-4]),
               x_eval=x_eval, y_pred=y_pred)
     np.savetxt(pred_path, y_pred, fmt='%d')
-    # *** START CODE HERE ***
-
     # *** END CODE HERE ***
 
 
