@@ -58,16 +58,20 @@ class LogisticRegression(LinearModel):
         
         # *** END CODE HERE ***
 
-    def predict(self, x):
+    def predict(self, x, p=False):
         """Make a prediction given new inputs x.
 
         Args:
             x: Inputs of shape (m, n).
+            p: if return prob of the output
 
         Returns:
             Outputs of shape (m,).
         """
         # *** START CODE HERE ***
         h_x_opt = util.sigmoid(x.dot(self.theta))
-        return np.where(h_x_opt >= 0.5, 1, 0)
+        if p:
+            return h_x_opt
+        else:
+            return np.where(h_x_opt >= 0.5, 1, 0)
         # *** END CODE HERE ***
