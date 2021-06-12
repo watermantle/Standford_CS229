@@ -59,6 +59,7 @@ class PoissonRegression(LinearModel):
 
             self.theta += self.step_size * gradient
             if np.linalg.norm(self.step_size * gradient, ord=1) < self.eps: break
+
         # *** END CODE HERE ***
 
     def predict(self, x):

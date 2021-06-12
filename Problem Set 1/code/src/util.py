@@ -91,6 +91,12 @@ def plot(x, y, theta, save_path, correction=1.0, x_eval=[], y_pred=[]):
     plt.savefig(save_path)
 
 
-## sigmoid function to compute logistic hypothetical function
+# sigmoid function to compute logistic hypothetical function
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
+
+
+# MSE function to return mse
+def MSE(y_pred, y_true):
+    m = y_pred.shape[0]
+    return ((y_pred - y_true) ** 2).sum() / m
