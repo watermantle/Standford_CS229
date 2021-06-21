@@ -146,9 +146,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="linear_model.cpp" />
     <ClCompile Include="run.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="util.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="linear_model.hpp" />
+    <ClInclude Include="p01b_logreg.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
