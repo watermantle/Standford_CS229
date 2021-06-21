@@ -15,6 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="run.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util.hpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
