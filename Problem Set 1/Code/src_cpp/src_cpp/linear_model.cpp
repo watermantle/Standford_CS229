@@ -11,16 +11,7 @@ using namespace arma;
 // constructors
 LinearModel::LinearModel() : theta(arma::zeros(3)), step_size(0.2), max_iter(100), eps(1e-5) {};
 LinearModel::LinearModel(const LinearModel& source) : theta(source.theta), step_size(source.step_size), max_iter(source.max_iter), eps(source.eps) {};
-LinearModel::LinearModel(const mat& theta, const double& step_szie, const int& max_iter, const double& eps) : theta(theta), step_size(step_szie), max_iter(max_iter), eps(eps) {}
-const void LinearModel::fit(const mat& x, const mat& y)
-{
-	return void();
-}
-const mat LinearModel::predict(const mat& x)
-{
-	return mat();
-}
-;
+LinearModel::LinearModel(mat& theta, const double& step_size, const int& max_iter, const double& eps) : theta(theta), step_size(step_size), max_iter(max_iter), eps(eps) {}
 LinearModel::~LinearModel() {};
 
 // assignment operation

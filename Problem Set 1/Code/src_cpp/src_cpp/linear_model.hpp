@@ -32,7 +32,7 @@ public:
 	// constructors
 	LinearModel(); // default constructor
 	LinearModel(const LinearModel& source); // copy constructor
-	LinearModel(const mat& theta, const double& step_szie, const int& max_iter, const double& eps); // constructor given value
+	LinearModel(mat& theta, const double& step_size, const int& max_iter, const double& eps); // constructor given value
 	~LinearModel();
 
 	// Assignment operator
@@ -40,7 +40,7 @@ public:
 
 	// functions
 	virtual const void fit(const mat& x, const mat& y) = 0; // pure virtual function, different for different models
-	virtual const mat predict(const mat& x) = 0; // pure virtual function for prediction, different for different models
+	virtual const mat predict(const mat& x, const bool& p=false) = 0; // pure virtual function for prediction, different for different models
 };
 
 #endif;

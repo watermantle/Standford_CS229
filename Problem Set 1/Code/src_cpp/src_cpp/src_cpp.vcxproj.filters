@@ -27,6 +27,9 @@
     <ClCompile Include="linear_model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="p01b_logreg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="linear_model.hpp">
