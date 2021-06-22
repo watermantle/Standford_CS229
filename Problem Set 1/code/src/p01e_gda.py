@@ -45,7 +45,7 @@ class GDA(LinearModel):
 
         ### calculate GDA parameters
         num_y1 = y[y == 1].sum()
-        phi = num_y1.sum() / m
+        phi = num_y1 / m
 
         mu0 = x[y == 0].sum(axis=0) / (m - num_y1)
         mu1 = x[y == 1].sum(axis=0) / num_y1

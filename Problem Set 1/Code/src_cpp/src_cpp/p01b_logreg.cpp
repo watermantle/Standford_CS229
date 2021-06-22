@@ -43,13 +43,7 @@ const void LogisticRegression::fit(const mat& x, const mat& y) {
 		mat h_x = util::sigmoid(x * theta);
 
 		mat gradient_J = -x.t() * (y - h_x) / m;
-		mat h_p = h_x % (1 - h_x);
-		mat temp(m, n); // temp mat to store product of h_p and x (element-wise)
-		for (int i = 0; i != n; i++) {
-			temp.col(i) = x.col(i) % h_p;
-		}
-		mat H_J = (temp).t() * x / m;
-
+		mat H_J = (x.each_col() % (h_x % (1 - h_x))).t() * x / m;
 		// update theta & check if coverge
 		vec step = arma::inv(H_J) * gradient_J;
 		theta -= step;

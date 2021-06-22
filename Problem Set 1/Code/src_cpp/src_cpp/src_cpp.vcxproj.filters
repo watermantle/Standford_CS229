@@ -30,12 +30,18 @@
     <ClCompile Include="p01b_logreg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="p01e_GDA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="linear_model.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="p01b_logreg.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="p01e_GDA.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
