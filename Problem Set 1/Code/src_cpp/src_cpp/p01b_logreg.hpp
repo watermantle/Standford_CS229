@@ -24,4 +24,7 @@ public:
 	const mat predict(const mat& x, const bool& p=false);
 };
 
+// p01b_logreg executive function
+void p01b_logreg(string dataset);
+
 #endif;

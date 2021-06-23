@@ -49,7 +49,6 @@ namespace util {
 		return make_tuple(inputs, label);
 	}
 
-
 	// sigmoid function to computer logsitic hypothetical function
 	mat sigmoid(mat z) {
 		return 1 / (1 + exp(-z));

@@ -78,3 +78,35 @@ const mat LogisticRegression::predict(const mat& x, const bool& p) {
 		return ks;
 	}
 }
+
+// executive function of p01b_logreg
+void p01b_logreg(string dataset) {
+	// loadata set
+	std::string root, path_train, path_eval, savedr;
+	root = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\data\\";
+	savedr = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\src_cpp\\src_cpp\\output\\";
+	path_train = dataset + "_train.csv";
+	path_eval = dataset + "_valid.csv";
+
+	tuple<mat, mat> data_train = util::load_dataset(root + path_train);
+	tuple<mat, mat> data_eval = util::load_dataset(root + path_eval);
+
+	mat X_train, y_train, X_eval, y_eval;
+
+	// Get train/eval data
+	X_train = get<0>(data_train);
+	y_train = get<1>(data_train);
+
+	X_eval = get<0>(data_eval);
+	y_eval = get<1>(data_eval);
+
+	// train dataset1, predict, save
+	LogisticRegression logreg;
+	logreg.fit(X_train, y_train);
+
+	mat y_pred;
+	y_pred = logreg.predict(X_eval);
+	y_pred.save(savedr + "p01b_pred_logreg_" + dataset + ".csv", arma::arma_ascii);
+
+	return;
+}

@@ -27,4 +27,6 @@ public:
 	const mat predict(const mat& x, const bool& p = false);
 };
 
+void p01e_GDA(string dataset);
+
 #endif
