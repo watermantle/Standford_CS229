@@ -24,11 +24,11 @@ public:
 	eps : Threshold for determining convergence.
 	theta_0 : Initial guess for theta.If None, use the zero vector.
 	*/
-    
+
 	vec theta;
 	double step_size, eps;
 	int max_iter;
-	
+
 	// constructors
 	LinearModel(); // default constructor
 	LinearModel(const LinearModel& source); // copy constructor
@@ -40,7 +40,7 @@ public:
 
 	// functions
 	virtual const void fit(const mat& x, const mat& y) = 0; // pure virtual function, different for different models
-	virtual const mat predict(const mat& x, const bool& p=false) = 0; // pure virtual function for prediction, different for different models
+	virtual const mat predict(const mat& x, const bool& p = false) = 0; // pure virtual function for prediction, different for different models
 };
 
 #endif;

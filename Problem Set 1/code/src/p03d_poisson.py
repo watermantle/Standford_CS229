@@ -48,10 +48,10 @@ class PoissonRegression(LinearModel):
 
         m, n = x.shape
         self.theta = np.zeros(n)
+        batch_size = 100
 
         while True:
-            # pick up a random index to perform mini batch gradient ascent with size of 100
-            batch_size = 100
+            # pick up a random index to perform mini batch gradient ascent with size of 100    
             idx_rnd = np.random.choice(range(m), size=batch_size)
             xi = x[idx_rnd]
             yi = y[idx_rnd]

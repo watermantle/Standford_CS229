@@ -33,7 +33,7 @@ const void LogisticRegression::fit(const mat& x, const mat& y) {
 	x: Training example inputs.Shape(m, n).
 	y : Training example labels.Shape(m, ).
 	*/
-	arma::uword m = x.n_rows, n = x.n_cols;
+	unsigned int m = as_scalar(x.n_rows), n = as_scalar(x.n_cols);
 	theta = arma::zeros(n); // initate theta with zeros, shape of (m, 1)
 	
 	// apply newton's method

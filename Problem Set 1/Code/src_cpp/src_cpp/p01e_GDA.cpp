@@ -38,7 +38,7 @@ const void GDA::fit(const mat& x, const mat& y) {
 	Returns :
 	theta : GDA model parameters.
 	*/
-	arma::uword m = x.n_rows, n = x.n_cols;
+	unsigned int m = as_scalar(x.n_rows), n = as_scalar(x.n_cols);
 
 	// calculate GDA parameters
 	double num_y1 = accu(y);
