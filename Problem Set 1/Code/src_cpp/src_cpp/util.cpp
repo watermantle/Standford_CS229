@@ -18,7 +18,7 @@ namespace util {
 		return new_x;
 	}
 
-	double MSE(vec y_pred, vec y_true) {
+	double MSE(vec& y_pred, vec& y_true) {
 		arma::uword m = y_pred.n_rows;
 		return sum(pow((y_pred - y_true), 2)) / m;
 	}

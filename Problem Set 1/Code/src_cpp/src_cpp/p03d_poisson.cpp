@@ -50,6 +50,7 @@ const mat PoissonRegression::predict(const mat& x, const bool& p) {
 	x: Inputs of shape(m, n).
 	Returns :
 	Floating - point prediction for each input, shape(m, 1).*/
+	if (p) { cout << "Prob is not supported in this model, only predicted values returned.\n"; }
 	return exp(x * theta);
 }
 

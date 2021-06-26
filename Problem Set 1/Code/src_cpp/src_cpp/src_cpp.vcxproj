@@ -156,15 +156,23 @@
     <ClCompile Include="p03d_poisson.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="p05b_lwr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="run.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="util.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="p01e_GDA.hpp" />
+    <ClInclude Include="p01e_GDA.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="linear_model.hpp" />
     <ClInclude Include="p01b_logreg.hpp" />
     <ClInclude Include="p03d_poisson.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="p05b_lwr.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>

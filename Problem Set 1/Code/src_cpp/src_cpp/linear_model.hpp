@@ -33,7 +33,7 @@ public:
 	LinearModel(); // default constructor
 	LinearModel(const LinearModel& source); // copy constructor
 	LinearModel(mat& theta, const double& step_size, const int& max_iter, const double& eps); // constructor given value
-	~LinearModel();
+	virtual ~LinearModel();
 
 	// Assignment operator
 	LinearModel& operator = (const LinearModel& source);

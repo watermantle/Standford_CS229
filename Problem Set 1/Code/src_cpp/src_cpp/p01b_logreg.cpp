@@ -40,7 +40,8 @@ const void LogisticRegression::fit(const mat& x, const mat& y) {
 	int n_iter = 0;
 	
 	while (n_iter < max_iter) {
-		mat h_x = util::sigmoid(x * theta);
+		mat x_ = x * theta;
+		mat h_x = util::sigmoid(x_);
 
 		mat gradient_J = -x.t() * (y - h_x) / m;
 		mat H_J = (x.each_col() % (h_x % (1 - h_x))).t() * x / m;
@@ -91,7 +92,7 @@ void p01b_logreg(string dataset) {
 	tuple<mat, mat> data_train = util::load_dataset(root + path_train);
 	tuple<mat, mat> data_eval = util::load_dataset(root + path_eval);
 
-	mat X_train, y_train, X_eval, y_eval;
+	mat X_train, X_eval, y_train, y_eval;
 
 	// Get train/eval data
 	X_train = get<0>(data_train);
