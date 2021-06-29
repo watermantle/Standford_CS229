@@ -50,7 +50,7 @@ const mat LocallyWeightedLinearRegression::predict(const mat& x, const bool& p) 
 			normed.row(j) = norm(m_x.row(j) - x.row(i), 2);
 		}
 
-		W = diagmat(exp(normed / (2 * tau * tau)));
+		W = diagmat(exp(-normed / (2 * tau * tau)));
 
 		theta = arma::inv(m_x.t() * W * m_x) * m_x.t() * W * m_y;
 		y_pred.row(i) = x.row(i) * theta;
@@ -89,4 +89,56 @@ void p05b_lwr (string dataset) {
 	y_pred.save(savedr + "p05b_pred_wlr_" + dataset + ".csv", arma::arma_ascii);
 
 	cout << "MSE with tau=0.5 is " << util::MSE(y_pred, y_eval);
+}
+
+void p05c_tau(string dataset, vec taus) {
+	// loadata set
+	std::string root, path_train, path_eval, path_test, savedr;
+	root = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\data\\";
+	savedr = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\src_cpp\\src_cpp\\output\\";
+	path_train = dataset + "_train.csv";
+	path_eval = dataset + "_valid.csv";
+	path_test = dataset + "_test.csv";
+
+	tuple<mat, mat> data_train = util::load_dataset(root + path_train, 1, 1, true);
+	tuple<mat, mat> data_eval = util::load_dataset(root + path_eval, 1, 1, true);
+	tuple<mat, mat> data_test = util::load_dataset(root + path_test, 1, 1, true);
+
+	// Get train/eval data
+	mat X_train, X_eval, X_test;
+	vec y_train, y_eval, y_test;
+
+	X_train = get<0>(data_train);
+	y_train = get<1>(data_train);
+
+	X_eval = get<0>(data_eval);
+	y_eval = get<1>(data_eval);
+
+	X_test = get<0>(data_test);
+	y_test = get<1>(data_test);
+
+	// initate and train model
+	vec y_pred;
+	
+	arma::uword n_taus = taus.n_rows;
+	vec MSEs(n_taus);
+	double mse;
+	LocallyWeightedLinearRegression model_wlr;
+	for (int i = 0; i != n_taus; i ++) {
+		model_wlr.tau = as_scalar(taus.row(i));
+		model_wlr.fit(X_train, y_train);
+		y_pred = model_wlr.predict(X_eval);
+		mse = util::MSE(y_pred, y_eval);
+		MSEs.row(i) = mse;
+	}
+	
+	arma::uword dx = MSEs.index_min();
+
+	cout << "best tau is " << taus.row(dx) << endl;
+
+	model_wlr.tau = as_scalar(taus.row(dx));
+	model_wlr.fit(X_train, y_train);
+	y_pred = model_wlr.predict(X_test);
+	cout << "MSE on the test dataset is " << util::MSE(y_pred, y_test) << endl;
+	y_pred.save(savedr + "p05c_pred_tau_" + dataset + ".csv", arma::arma_ascii);
 }

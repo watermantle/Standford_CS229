@@ -11,7 +11,7 @@
 
 int main() {
 
-	std::string excode= "p05b";
+	std::string excode= "p05c";
 
 	if (excode == "p01b") {
 		p01b_logreg("ds1");
@@ -31,6 +31,10 @@ int main() {
 		p05b_lwr("ds5");
 	}
 
+	if (excode == "p05c") {
+		p05c_tau("ds5", vec{ 5e-2, 1e-1, 5e-1, 1e0, 1e1 });
+	}
+
 	if (excode == "all") {
 		p01b_logreg("ds1");
 		p01b_logreg("ds2");
@@ -42,6 +46,6 @@ int main() {
 
 		p05b_lwr("ds5");
 	}
-	
+
 	return 0;
 }

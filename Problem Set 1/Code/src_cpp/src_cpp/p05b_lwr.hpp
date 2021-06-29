@@ -32,3 +32,5 @@ public:
 
 // main function for problem 05b
 void p05b_lwr(string dataest);
+
+void p05c_tau(string dataset, vec taus); // 05c, main function
