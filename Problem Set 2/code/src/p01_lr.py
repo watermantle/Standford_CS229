@@ -35,10 +35,6 @@ def logistic_regression(X, Y):
         theta = theta - learning_rate * grad
         if i % 10000 == 0:
             print('Finished %d iterations' % i)
-
-            # print('Training loss = %f' % np.mean(np.log(1 + np.exp(-Y * X.dot(theta)))))
-            
-            # print('||theta_k - theta_{k-1}|| = %f' % np.linalg.norm(prev_theta - theta))
             
         if np.linalg.norm(prev_theta - theta) < 1e-15:
             print('Converged in %d iterations' % i)
