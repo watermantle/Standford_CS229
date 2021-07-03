@@ -20,6 +20,7 @@ def add_intercept_fn(x):
 
     return new_x
 
+
 def load_csv(csv_path, label_col='y', add_intercept=False):
     """Load dataset from a CSV file.
 
@@ -51,6 +52,7 @@ def load_csv(csv_path, label_col='y', add_intercept=False):
 
     return inputs, labels
 
+
 def load_spam_dataset(tsv_path):
     """Load the spam dataset from a TSV file
 
@@ -73,6 +75,7 @@ def load_spam_dataset(tsv_path):
             labels.append(1 if label == 'spam' else 0)
 
     return messages, np.array(labels)
+
 
 def plot(x, y, theta, save_path, correction=1.0):
     """Plot dataset and fitted logistic regression parameters.
@@ -100,7 +103,7 @@ def plot(x, y, theta, save_path, correction=1.0):
     plt.savefig(save_path)
 
 
-def plot_contour(predict_fn):
+def plot_contour(predict_fn, ax):
     """Plot a contour given the provided prediction function"""
     x, y = np.meshgrid(np.linspace(-10, 10, num=20), np.linspace(-10, 10, num=20))
     z = np.zeros(x.shape)
@@ -109,7 +112,8 @@ def plot_contour(predict_fn):
         for j in range(y.shape[1]):
             z[i, j] = predict_fn([x[i, j], y[i, j]])
 
-    plt.contourf(x, y, z, levels=[-float('inf'), 0, float('inf')], colors=['orange', 'cyan'])
+    ax.contourf(x, y, z, levels=[-float('inf'), 0, float('inf')], colors=['orange', 'cyan'], alpha=0.3)
+
 
 def plot_points(x, y):
     """Plot some points where x are the coordinates and y is the label"""
@@ -120,6 +124,7 @@ def plot_points(x, y):
     ax.scatter(x_one[:,0], x_one[:,1], marker='x', color='red')
     ax.scatter(x_two[:,0], x_two[:,1], marker='o', color='blue')
     return fig, ax
+
 
 def write_json(filename, value):
     """Write the provided value as JSON to the given filename"""
