@@ -1,11 +1,13 @@
 import json
 
+
 def example_weights():
     """This is an example function that returns weights.
     Use this function as a template for optimal_step_weights and optimal_sigmoid_weights.
     You do not need to modify this class for this assignment.
     """
-    w = {}
+
+    w = dict()
 
     w['hidden_layer_0_1'] = 0
     w['hidden_layer_1_1'] = 0
@@ -40,7 +42,15 @@ def optimal_step_weights():
     w = example_weights()
 
     # *** START CODE HERE ***
-
+    w['hidden_layer_0_1'] = -0.5
+    w['hidden_layer_1_1'] = 1
+    w['hidden_layer_2_1'] = 0
+    w['hidden_layer_0_2'] = -0.5
+    w['hidden_layer_1_2'] = 0
+    w['hidden_layer_2_2'] = 1
+    w['hidden_layer_0_3'] = -4
+    w['hidden_layer_1_3'] = 1
+    w['hidden_layer_2_3'] = 1
     # *** END CODE HERE ***
 
     return w
@@ -57,8 +67,12 @@ def optimal_linear_weights():
     This function should return a dict with elements for each weight, see example_weights above.
 
     """
-
+    w = optimal_step_weights()
     # *** START CODE HERE ***
+    w['output_layer_0'] = 0
+    w['output_layer_1'] = 1
+    w['output_layer_2'] = 1
+    w['output_layer_3'] = 1
     # *** END CODE HERE ***
 
     return w

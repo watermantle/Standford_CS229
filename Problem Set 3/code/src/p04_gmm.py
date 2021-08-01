@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from scipy import stats
 
 PLOT_COLORS = ['red', 'green', 'blue', 'orange']  # Colors for your plots
-K = 4           # Number of Gaussians in the mixture model
+K = 4  # Number of Gaussians in the mixture model
 NUM_TRIALS = 3  # Number of trials to run (can be adjusted for debugging)
 UNLABELED = -1  # Cluster label for unlabeled data points (do not change)
 
@@ -21,12 +22,25 @@ def main(is_semi_supervised, trial_num):
     if is_semi_supervised:
         # Split into labeled and unlabeled examples
         labeled_idxs = (z != UNLABELED).squeeze()
-        x_tilde = x[labeled_idxs, :]   # Labeled examples
-        z = z[labeled_idxs, :]         # Corresponding labels
-        x = x[~labeled_idxs, :]        # Unlabeled examples
+        x_tilde = x[labeled_idxs, :]  # Labeled examples
+        z = z[labeled_idxs, :]  # Corresponding labels
+        x = x[~labeled_idxs, :]  # Unlabeled examples
 
     # *** START CODE HERE ***
+    # (1) Initialize mu and sigma by splitting the m data points uniformly at random
+    # into K groups, then calculating the sample mean and covariance for each group
+    m, n = x.shape
+    classes = np.random.randint(K, size=m)
+    mu = np.array([x[classes == j].mean(axis=0) for j in range(K)])  # shape of (K, n)
+    sigma = np.array([np.cov(x[classes == j].T) for j in range(K)])  # shape of (K, n, n)
 
+    # (2) Initialize phi to place equal probability on each Gaussian
+    # phi should be a numpy array of shape (K,)
+    phi = np.ones(K) / K
+
+    # (3) Initialize the w values to place equal probability on each Gaussian
+    # w should be a numpy array of shape (m, K)
+    w = np.ones((m, K)) / K
     # *** END CODE HERE ***
 
     if is_semi_supervised:
@@ -64,6 +78,8 @@ def run_em(x, w, phi, mu, sigma):
     eps = 1e-3  # Convergence threshold
     max_iter = 1000
 
+    K = mu.shape[0]
+
     # Stop when the absolute change in log-likelihood is < eps
     # See below for explanation of the convergence criterion
     it = 0
@@ -71,17 +87,31 @@ def run_em(x, w, phi, mu, sigma):
     while it < max_iter and (prev_ll is None or np.abs(ll - prev_ll) >= eps):
         # Just a placeholder for the starter code
         # *** START CODE HERE
-        # (1) E-step: Update your estimates in w
-        # (2) M-step: Update the model parameters phi, mu, and sigma
-        # (3) Compute the log-likelihood of the data to check for convergence.
         # By log-likelihood, we mean `ll = sum_x[log(sum_z[p(x|z) * p(z)])]`.
         # We define convergence by the first iteration where abs(ll - prev_ll) < eps.
         # Hint: For debugging, recall part (a). We showed that ll should be monotonically increasing.
-        
-        # E-step
 
-        # M-step
+        # (1) E-step: Update your estimates in w
+        for i in range(K):
+            multi_norm = stats.multivariate_normal(mean=mu[i], cov=sigma[i])
+            w[:, i] = multi_norm.pdf(x) * phi[i]
+        w /= w.sum(axis=1, keepdims=True)
 
+        # (2) M-step: Update the model parameters phi, mu, and sigma
+        phi = w.mean(axis=0)
+        mu = w.T.dot(x) / w.sum(axis=0).reshape((K, -1))
+        for i in range(K):
+            sigma[i] = (w[:, i].reshape(-1, 1) * (x - mu[i])).T.dot(x - mu[i]) / w[:, i].sum()
+
+        # (3) Compute the log-likelihood of the data to check for convergence.
+        prev_ll = ll
+        p_xz = np.zeros(w.shape)
+        for i in range(K):
+            multi_norm = stats.multivariate_normal(mean=mu[i], cov=sigma[i])
+            p_xz[:, i] = multi_norm.pdf(x) * phi[i]
+
+        ll = np.sum(np.log(p_xz))
+        it += 1
         # *** END CODE HERE ***
     print(f'Number of iterations:{it}')
 
@@ -109,25 +139,44 @@ def run_semi_supervised_em(x, x_tilde, z, w, phi, mu, sigma):
     """
     # No need to change any of these parameters
     alpha = 20.  # Weight for the labeled examples
-    eps = 1e-3   # Convergence threshold
+    eps = 1e-3  # Convergence threshold
     max_iter = 1000
+
+    m, n = x.shape
+    m_tilde = x_tilde.shape[0]
 
     # Stop when the absolute change in log-likelihood is < eps
     # See below for explanation of the convergence criterion
     it = 0
     ll = prev_ll = None
     while it < max_iter and (prev_ll is None or np.abs(ll - prev_ll) >= eps):
-        pass # Just a placeholder for the starter code
+        pass  # Just a placeholder for the starter code
         # *** START CODE HERE ***
         # (1) E-step: Update your estimates in w
+        for i in range(K):
+            multi_norm = stats.multivariate_normal(mean=mu[i], cov=sigma[i])
+            w[:, i] = multi_norm.pdf(x) * phi[i]
+        w /= w.sum(axis=1, keepdims=True)
+
         # (2) M-step: Update the model parameters phi, mu, and sigma
+        for i in range(K):
+            phi[i] = (w[:, i].sum(axis=0) + alpha * sum(z == i)) / (m + alpha * m_tilde)
+            x_tilde_i = x_tilde[z.reshape(-1,) == i]
+            mu[i] = (w[:, i].T.dot(x) + alpha * x_tilde_i.sum(axis=0)) / (sum(w[:, i]) + alpha * sum(z == i))
+            sigma[i] = ((w[:, i].reshape(-1, 1) * (x - mu[i])).T.dot(x - mu[i])
+                        + alpha * (x_tilde_i - mu[i]).T.dot(x_tilde_i - mu[i])) / (sum(w[:, i]) + alpha * sum(z == i))
         # (3) Compute the log-likelihood of the data to check for convergence.
         # Hint: Make sure to include alpha in your calculation of ll.
         # Hint: For debugging, recall part (a). We showed that ll should be monotonically increasing.
-        
-        # E-step
-
-        # M-step
+        prev_ll = ll
+        p_xz = np.zeros(w.shape)
+        p_xz_tilde = np.zeros((m_tilde, K))
+        for i in range(K):
+            multi_norm = stats.multivariate_normal(mean=mu[i], cov=sigma[i])
+            p_xz[:, i] = multi_norm.pdf(x) * phi[i]
+            p_xz_tilde[:, i] = multi_norm.pdf(x_tilde) * phi[i]
+        ll = np.sum(np.log(p_xz)) + np.sum(np.log(p_xz_tilde))
+        it += 1
 
         # *** END CODE HERE ***
     print(f'Number of iterations:{it}')
@@ -204,4 +253,5 @@ if __name__ == '__main__':
         # Once you've implemented the semi-supervised version,
         # uncomment the following line.
         # You do not need to add any other lines in this code block.
+        main(is_semi_supervised=True, trial_num=t)
         # *** END CODE HERE ***
