@@ -1,5 +1,5 @@
 # Standford_CS229
-# Video version is Autumn 2018
+# Video version: Autumn 2018
 
-Problem sets and personally solutions for CS229 Machine Learning course.
-Both C++ and Python version should be provided for each coding projects.
+Problem sets and personal solutions for CS229 Machine Learning course.
+Both C++ and Python versions should be provided for each coding project.
