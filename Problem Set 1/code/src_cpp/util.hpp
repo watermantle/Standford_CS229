@@ -21,6 +21,6 @@ namespace util {
 	mat sigmoid(mat z);
 	// mean squared errors calculation
 	double MSE(vec& y_pred, vec& y_true);
-}
+};
 
-#endif;
+#endif // end
