@@ -1,6 +1,7 @@
 // run file to go over algos
 #include <iostream>
 #include <armadillo>
+#include <chrono>
 #include "util.hpp"
 #include "linear_model.hpp"
 #include "p01b_logreg.hpp"
@@ -8,10 +9,13 @@
 #include "p03d_poisson.hpp"
 #include "p05b_lwr.hpp"
 
+using namespace std;
+using namespace std::chrono;
 
 int main() {
+	auto start = high_resolution_clock::now();
 
-	std::string excode= "p05c";
+	std::string excode= "all";
 
 	if (excode == "p01b") {
 		p01b_logreg("ds1");
@@ -46,6 +50,12 @@ int main() {
 
 		p05b_lwr("ds5");
 	}
+
+	auto stop = high_resolution_clock::now();
+
+	auto duration = duration_cast<microseconds>(stop - start);
+
+	cout << "the program running time is " << duration.count() << endl;
 
 	return 0;
 }

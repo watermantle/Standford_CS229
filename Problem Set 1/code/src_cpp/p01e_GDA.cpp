@@ -3,9 +3,12 @@ GDA source file to apply GDA method and functions
 */
 
 #include <armadillo>
+#include <filesystem>
 #include "p01e_GDA.hpp"
 #include "util.hpp"
 
+namespace fs = filesystem;
+using filesystem::current_path;
 using namespace std;
 using namespace arma;
 
@@ -16,7 +19,7 @@ GDA::GDA(mat& theta, const double& step_size, const int& max_iter, const double&
 GDA::~GDA() {};
 
 // assignment operator
-GDA& GDA::operator=(const GDA& source) {
+GDA& GDA::operator=(GDA&& source) {
 	if (this == &source) {
 		cout << "self-assignment checked";
 	}
@@ -75,7 +78,8 @@ const mat GDA::predict(const mat& x, const bool& p) {
 	*/
 
 	// hypothestic function results with trained theta
-	mat h_x_opt = util::sigmoid(x * theta);
+	mat x_theta = x * theta;
+	mat h_x_opt = util::sigmoid(x_theta);
 	arma::uword m = h_x_opt.n_rows;
 
 	if (p) { return h_x_opt; }
@@ -93,8 +97,10 @@ const mat GDA::predict(const mat& x, const bool& p) {
 void p01e_GDA(string dataset) {
 	// loadata set
 	std::string root, path_train, path_eval, savedr;
-	root = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\data\\";
-	savedr = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\src_cpp\\src_cpp\\output\\";
+	fs::path p = current_path();
+	root = p.parent_path().parent_path().string() + R"(/data/)";
+	savedr = p.string() + R"(/output/)";
+
 	path_train = dataset + "_train.csv";
 	path_eval = dataset + "_valid.csv";
 
@@ -111,11 +117,12 @@ void p01e_GDA(string dataset) {
 	y_eval = get<1>(data_eval);
 
 	// train dataset1, predict, save
-	GDA GDA_model;
-	GDA_model.fit(X_train, y_train);
+	
+	auto GDA_model_ptr = make_unique<GDA>();
+	(*GDA_model_ptr).fit(X_train, y_train);
 
 	mat y_pred;
-	y_pred = GDA_model.predict(X_eval);
+	y_pred = (*GDA_model_ptr).predict(X_eval);
 	y_pred.save(savedr + "p01e_pred_GDA_" + dataset + ".csv", arma::arma_ascii);
 
 	return;

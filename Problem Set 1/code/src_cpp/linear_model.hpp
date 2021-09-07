@@ -3,8 +3,7 @@ header file for basic linear model
 base class providing some basic functionalities
 */
 
-#ifndef linear_model_HPP
-#define linear_model_HPP
+#pragma once
 
 #include <iostream>
 #include <armadillo>
@@ -42,5 +41,3 @@ public:
 	virtual const void fit(const mat& x, const mat& y) = 0; // pure virtual function, different for different models
 	virtual const mat predict(const mat& x, const bool& p = false) = 0; // pure virtual function for prediction, different for different models
 };
-
-#endif;

@@ -4,7 +4,7 @@
 #include <armadillo>
 
 namespace util {
-	mat add_intercept(mat x) {
+	mat add_intercept(mat& x) {
 		/*
 		Args:
 			x: 2D matrix
@@ -50,7 +50,7 @@ namespace util {
 	}
 
 	// sigmoid function to computer logsitic hypothetical function
-	mat sigmoid(mat z) {
+	mat sigmoid(mat& z) {
 		return 1 / (1 + exp(-z));
 	}
 }

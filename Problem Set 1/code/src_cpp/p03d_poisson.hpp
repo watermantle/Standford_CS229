@@ -3,8 +3,7 @@ header file to apply poisson regression with GLM (General Linear Model). As pois
 in the exponential family
 */
 
-#ifndef p03d_poisson_HPP
-#define p03d_poisson_HPP
+#pragma once
 
 #include <iostream>
 #include <armadillo>
@@ -24,7 +23,7 @@ public:
 	~PoissonRegression();
 
 	// Assignment operator
-	PoissonRegression& operator = (const PoissonRegression& source);
+	PoissonRegression& operator = (PoissonRegression&& source);
 
 	// functions
 	const void fit(const mat& x, const mat& y);
@@ -33,5 +32,3 @@ public:
 
 // executive function
 void p03d_poisson(string dataset);
-
-#endif

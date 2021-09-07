@@ -1,8 +1,11 @@
 // p05b_lwr source file to apply class and function
 
+#include <filesystem>
 #include "p05b_lwr.hpp"
 #include "util.hpp"
 
+namespace fs = filesystem;
+using filesystem::current_path;
 
 LocallyWeightedLinearRegression::LocallyWeightedLinearRegression() : LinearModel(), tau(0.5) {};
 LocallyWeightedLinearRegression::LocallyWeightedLinearRegression(const LocallyWeightedLinearRegression& source) : LinearModel(source), tau(source.tau) {};
@@ -61,8 +64,10 @@ const mat LocallyWeightedLinearRegression::predict(const mat& x, const bool& p) 
 void p05b_lwr (string dataset) {
 	// loadata set
 	std::string root, path_train, path_eval, savedr;
-	root = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\data\\";
-	savedr = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\src_cpp\\src_cpp\\output\\";
+	fs::path p = current_path();
+	root = p.parent_path().parent_path().string() + R"(/data/)";
+	savedr = p.string() + R"(/output/)";
+
 	path_train = dataset + "_train.csv";
 	path_eval = dataset + "_valid.csv";
 
@@ -94,8 +99,10 @@ void p05b_lwr (string dataset) {
 void p05c_tau(string dataset, vec taus) {
 	// loadata set
 	std::string root, path_train, path_eval, path_test, savedr;
-	root = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\data\\";
-	savedr = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\src_cpp\\src_cpp\\output\\";
+	fs::path p = current_path();
+	root = p.parent_path().parent_path().string() + R"(/data/)";
+	savedr = p.string() + R"(/output/)";
+	
 	path_train = dataset + "_train.csv";
 	path_eval = dataset + "_valid.csv";
 	path_test = dataset + "_test.csv";
@@ -123,11 +130,13 @@ void p05c_tau(string dataset, vec taus) {
 	arma::uword n_taus = taus.n_rows;
 	vec MSEs(n_taus);
 	double mse;
-	LocallyWeightedLinearRegression model_wlr;
+	
+	auto LLWLR_ptr = make_unique<LocallyWeightedLinearRegression>();
+
 	for (int i = 0; i != n_taus; i ++) {
-		model_wlr.tau = as_scalar(taus.row(i));
-		model_wlr.fit(X_train, y_train);
-		y_pred = model_wlr.predict(X_eval);
+		(*LLWLR_ptr).tau = as_scalar(taus.row(i));
+		(*LLWLR_ptr).fit(X_train, y_train);
+		y_pred = (*LLWLR_ptr).predict(X_eval);
 		mse = util::MSE(y_pred, y_eval);
 		MSEs.row(i) = mse;
 	}
@@ -136,9 +145,9 @@ void p05c_tau(string dataset, vec taus) {
 
 	cout << "best tau is " << taus.row(dx) << endl;
 
-	model_wlr.tau = as_scalar(taus.row(dx));
-	model_wlr.fit(X_train, y_train);
-	y_pred = model_wlr.predict(X_test);
+	(*LLWLR_ptr).tau = as_scalar(taus.row(dx));
+	(*LLWLR_ptr).fit(X_train, y_train);
+	y_pred = (*LLWLR_ptr).predict(X_test);
 	cout << "MSE on the test dataset is " << util::MSE(y_pred, y_test) << endl;
 	y_pred.save(savedr + "p05c_pred_tau_" + dataset + ".csv", arma::arma_ascii);
 }

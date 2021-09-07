@@ -2,9 +2,12 @@
 source file to apply logistic regression
 */
 #include <armadillo>
+#include <filesystem>
 #include "p01b_logreg.hpp"
 #include "util.hpp"
 
+namespace fs = filesystem;
+using filesystem::current_path;
 using namespace std;
 using namespace arma;
 
@@ -15,7 +18,7 @@ LogisticRegression::LogisticRegression(mat& theta, const double& step_size, cons
 LogisticRegression::~LogisticRegression() {};
 
 // assignment operator
-LogisticRegression& LogisticRegression::operator=(const LogisticRegression& source) {
+LogisticRegression& LogisticRegression::operator=(LogisticRegression&& source) {
 	if (this == &source) {
 		cout << "self-assignment checked";
 	}
@@ -34,20 +37,21 @@ const void LogisticRegression::fit(const mat& x, const mat& y) {
 	y : Training example labels.Shape(m, ).
 	*/
 	unsigned int m = as_scalar(x.n_rows), n = as_scalar(x.n_cols);
-	theta = arma::zeros(n); // initate theta with zeros, shape of (m, 1)
-	
+	auto theta = make_unique<mat>(arma::zeros(n)); // initate theta with zeros, shape of (m, 1)
+
 	// apply newton's method
 	int n_iter = 0;
+	unique_ptr<mat> mat_ptr = make_unique<mat>(x);
 	
 	while (n_iter < max_iter) {
-		mat x_ = x * theta;
+		
+		mat x_ = *mat_ptr * *theta;
 		mat h_x = util::sigmoid(x_);
-
-		mat gradient_J = -x.t() * (y - h_x) / m;
-		mat H_J = (x.each_col() % (h_x % (1 - h_x))).t() * x / m;
+		mat gradient_J = -(*mat_ptr).t() * (y - h_x) / m;
+		mat H_J = ((*mat_ptr).each_col() % (h_x % (1 - h_x))).t() * (*mat_ptr) / m;
 		// update theta & check if coverge
 		vec step = arma::inv(H_J) * gradient_J;
-		theta -= step;
+		*theta -= step;
 		if (arma::norm(step, 1) < eps) { break; };
 		n_iter += 1;
 	}
@@ -66,7 +70,8 @@ const mat LogisticRegression::predict(const mat& x, const bool& p) {
 	*/
 
 	// hypothestic function results with trained theta
-	mat h_x_opt = util::sigmoid(x * theta);
+	mat x_theta = x * theta;
+	mat h_x_opt = util::sigmoid(x_theta);
 	arma::uword m = h_x_opt.n_rows;
 
 	if (p) { return h_x_opt; }
@@ -84,8 +89,10 @@ const mat LogisticRegression::predict(const mat& x, const bool& p) {
 void p01b_logreg(string dataset) {
 	// loadata set
 	std::string root, path_train, path_eval, savedr;
-	root = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\data\\";
-	savedr = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\src_cpp\\src_cpp\\output\\";
+	fs::path p = current_path();
+	root = p.parent_path().parent_path().string() + R"(/data/)";
+	savedr = p.string() + R"(/output/)";
+
 	path_train = dataset + "_train.csv";
 	path_eval = dataset + "_valid.csv";
 
@@ -102,11 +109,13 @@ void p01b_logreg(string dataset) {
 	y_eval = get<1>(data_eval);
 
 	// train dataset1, predict, save
-	LogisticRegression logreg;
-	logreg.fit(X_train, y_train);
+	auto logreg_ptr = make_unique<LogisticRegression>();
+
+	//LogisticRegression logreg;
+	(*logreg_ptr).fit(X_train, y_train);
 
 	mat y_pred;
-	y_pred = logreg.predict(X_eval);
+	y_pred = (*logreg_ptr).predict(X_eval);
 	y_pred.save(savedr + "p01b_pred_logreg_" + dataset + ".csv", arma::arma_ascii);
 
 	return;

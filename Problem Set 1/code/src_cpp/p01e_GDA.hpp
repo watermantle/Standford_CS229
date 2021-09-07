@@ -1,8 +1,7 @@
 /*
 header file to apply GDA (Gaussian Discriminant Analysis)
 */
-#ifndef p01e_GDA_HPP
-#define p01e_GDA_HPP
+#pragma once
 
 #include <iostream>
 #include <armadillo>
@@ -20,7 +19,7 @@ public:
 	~GDA();
 
 	// assignment operator
-	GDA& operator = (const GDA& source);
+	GDA& operator = (GDA&& source);
 
 	// functions
 	const void fit(const mat& x, const mat& y);
@@ -28,5 +27,3 @@ public:
 };
 
 void p01e_GDA(string dataset);
-
-#endif

@@ -3,7 +3,11 @@ source file to apply functions and class in the header file
 */
 
 #include "p03d_poisson.hpp"
+#include <filesystem>
 #include "util.hpp"
+
+namespace fs = filesystem;
+using filesystem::current_path;
 
 // constructors
 PoissonRegression::PoissonRegression() : LinearModel() {};
@@ -12,7 +16,7 @@ PoissonRegression::PoissonRegression(mat& theta, const double& step_size, const 
 PoissonRegression::~PoissonRegression() {};
 
 // Assignment operator
-PoissonRegression& PoissonRegression::operator=(const PoissonRegression& source) {
+PoissonRegression& PoissonRegression::operator=(PoissonRegression&& source) {
 	if (this == &source) {
 		cout << "self-assignment check" << endl;
 	}
@@ -57,8 +61,10 @@ const mat PoissonRegression::predict(const mat& x, const bool& p) {
 void p03d_poisson(string dataset) {
 	// loadata set
 	std::string root, path_train, path_eval, savedr;
-	root = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\data\\";
-	savedr = "C:\\Users\\YB\\Documents\\GitHub\\Standford_CS229\\Problem Set 1\\Code\\src_cpp\\src_cpp\\output\\";
+	fs::path p = current_path();
+	root = p.parent_path().parent_path().string() + R"(/data/)";
+	savedr = p.string() + R"(/output/)";
+
 	path_train = dataset + "_train.csv";
 	path_eval = dataset + "_valid.csv";
 
@@ -79,11 +85,14 @@ void p03d_poisson(string dataset) {
 	double step_size = 1e-7;
 	unsigned int max_iter = 100;
 	double eps = 1e-5;
-	PoissonRegression pois_reg(theta, step_size, max_iter, eps);
 
-	pois_reg.fit(X_train, y_train);
+	PoissonRegression pois_reg(theta, step_size, max_iter, eps);
+	auto PoissonReression_ptr = make_unique<PoissonRegression>(pois_reg);
+	
+
+	(*PoissonReression_ptr).fit(X_train, y_train);
 
 	mat y_pred;
-	y_pred = pois_reg.predict(X_eval);
+	y_pred = (*PoissonReression_ptr).predict(X_eval);
 	y_pred.save(savedr + "p03d_pred_poisson_" + dataset + ".csv", arma::arma_ascii);
 }

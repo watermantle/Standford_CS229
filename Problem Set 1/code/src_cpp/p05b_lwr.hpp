@@ -1,6 +1,7 @@
 /*
 header file to apply locally weighted regression (lwr)
 */
+#pragma once
 
 #include "linear_model.hpp"
 #include "armadillo"

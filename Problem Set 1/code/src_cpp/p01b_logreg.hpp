@@ -1,6 +1,5 @@
 // header file for p01b_logreg, defined fitting method and predict function
-#ifndef p0b_logreg_HPP
-#define p0b_logreg_HPP
+#pragma once
 
 #include "linear_model.hpp"
 
@@ -17,7 +16,7 @@ public:
 	~LogisticRegression();
 
 	// assignment operator
-	LogisticRegression& operator = (const LogisticRegression& source);
+	LogisticRegression& operator = (LogisticRegression&& source);
 
 	// functions
 	const void fit(const mat& x, const mat& y);
@@ -26,5 +25,3 @@ public:
 
 // p01b_logreg executive function
 void p01b_logreg(string dataset);
-
-#endif;
