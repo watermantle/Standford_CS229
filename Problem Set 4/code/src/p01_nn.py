@@ -41,7 +41,7 @@ def backward_softmax(x, grad_outputs):
     """
     
     # *** START CODE HERE ***
-    
+    return ()
     # *** END CODE HERE ***
 
 def forward_relu(x):

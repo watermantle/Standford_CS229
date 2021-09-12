@@ -21,9 +21,9 @@ def update_W(W, x, learning_rate):
     """
     
     # *** START CODE HERE ***
-    
+    grad = np.linalg.inv(W.T) - np.outer(np.sign(W.dot(x)), x.T)
+    updated_W = W + learning_rate * grad
     # *** END CODE HERE ***
-
     return updated_W
 
 
@@ -43,6 +43,12 @@ def unmix(X, W):
 
 
     # *** START CODE HERE ***
+    # m = X.shape[0]
+    # idx = list(range(m))
+    # np.random.shuffle(idx)
+    # for x in X[idx]:
+    #     W = update_W(W, x, 1)
+    S = X.dot(W.T)
     # *** END CODE HERE ***
 
     return S
@@ -69,7 +75,12 @@ def unmixer(X):
 
     anneal = [0.1 , 0.1, 0.1, 0.05, 0.05, 0.05, 0.02, 0.02, 0.01 , 0.01, 0.005, 0.005, 0.002, 0.002, 0.001, 0.001]
     print('Separating tracks ...')
-
+    for lr in anneal:
+        print(lr)
+        rand = np.random.permutation(range(M))
+        for i in rand:
+            x = X[i]
+            W = update_W(W, x, lr)
     return W
 
 def main():
