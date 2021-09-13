@@ -197,7 +197,7 @@ def update_mdp_transition_probs_reward(mdp_data):
                 mdp_data['transition_probs'][state,:, action] /= num_counts_new_states[state, action]
         # check if the state has ever been reached
         if reward_counts[state, 1] != 0:
-            mdp_data['reward', state] = -1 * reward_counts[state, 0] / reward_counts[state, 1]
+            mdp_data['reward'][state] = -1 * reward_counts[state, 0] / reward_counts[state, 1]
     # *** END CODE HERE ***
 
     # This function does not return anything
@@ -243,7 +243,7 @@ def update_mdp_value(mdp_data, tolerance, gamma):
 
 def main(plot=True):
     # Seed the randomness of the simulation so this outputs the same thing each time
-    seed = 0
+    seed = 3
     np.random.seed(seed)
 
     # Simulation parameters
