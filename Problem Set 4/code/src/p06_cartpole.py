@@ -125,6 +125,11 @@ def choose_action(state, mdp_data):
     """
 
     # *** START CODE HERE ***
+    value_expected = mdp_data['value'].dot(mdp_data['transition_probs'][state])
+    if value_expected[0] == value_expected[1]:
+        return np.random.randint(2)
+    else:
+        return np.argmax(value_expected)
     # *** END CODE HERE ***
 
 def update_mdp_transition_counts_reward_counts(mdp_data, state, action, new_state, reward):
@@ -149,6 +154,14 @@ def update_mdp_transition_counts_reward_counts(mdp_data, state, action, new_stat
     """
 
     # *** START CODE HERE ***
+    # record rewards
+    mdp_data["reward_counts"][new_state, 1] += 1
+
+    if reward == -1:
+        mdp_data["reward_counts"][new_state, 0] += 1
+
+    # record state, action, new_state, where action is either 0 (right) or 1 (left)
+    mdp_data["transition_counts"][state, new_state, action] += 1
     # *** END CODE HERE ***
 
     # This function does not return anything
@@ -172,6 +185,19 @@ def update_mdp_transition_probs_reward(mdp_data):
     """
 
     # *** START CODE HERE ***
+    transition_counts = mdp_data['transition_counts']
+    num_states = transition_counts.shape[0]
+    num_counts_new_states = transition_counts.sum(axis=1)
+    reward_counts = mdp_data['reward_counts']
+
+    for state in range(num_states):
+        for action in range(2):
+            if num_counts_new_states[state, action] != 0:
+                mdp_data['transition_probs'][state,:, action] = transition_counts[state, :,action]
+                mdp_data['transition_probs'][state,:, action] /= num_counts_new_states[state, action]
+        # check if the state has ever been reached
+        if reward_counts[state, 1] != 0:
+            mdp_data['reward', state] = -1 * reward_counts[state, 0] / reward_counts[state, 1]
     # *** END CODE HERE ***
 
     # This function does not return anything
@@ -198,6 +224,21 @@ def update_mdp_value(mdp_data, tolerance, gamma):
     """
 
     # *** START CODE HERE ***
+    n_iter = 0
+    transition_probs = mdp_data['transition_probs']
+
+    while True:
+        value_curr = mdp_data['value']
+        value_new = mdp_data['reward'] + gamma * value_curr.dot(transition_probs).max(axis=1)
+        mdp_data['value'] = value_new
+        n_iter += 1
+
+        # check if converge
+        if np.max(np.abs(value_new - value_curr)) < tolerance:
+            break
+
+    return n_iter == 1
+
     # *** END CODE HERE ***
 
 def main(plot=True):
